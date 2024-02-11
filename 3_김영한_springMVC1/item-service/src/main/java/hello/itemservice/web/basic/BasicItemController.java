@@ -29,7 +29,12 @@ public class BasicItemController {
 
     }
 
-
+    @GetMapping("/{itemId}")
+    public String item(@PathVariable long itemId, Model model){
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item", item);
+        return "basic/item";
+    }
 
     @PostConstruct
     public void init(){
