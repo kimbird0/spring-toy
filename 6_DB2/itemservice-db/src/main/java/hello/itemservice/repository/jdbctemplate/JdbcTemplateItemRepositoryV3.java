@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * SimpleJdbcTemplateInsert
+ * SimpleJdbcInsert
  */
 @Slf4j
 public class JdbcTemplateItemRepositoryV3 implements ItemRepository {
@@ -36,6 +36,7 @@ public class JdbcTemplateItemRepositoryV3 implements ItemRepository {
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("item")
                 .usingGeneratedKeyColumns("id");
+//                .usingColumns("item_name", "price", "quantity"); //생략 가능
     }
 
     @Override
@@ -48,22 +49,22 @@ public class JdbcTemplateItemRepositoryV3 implements ItemRepository {
 
     @Override
     public void update(Long itemId, ItemUpdateDto updateParam) {
-        String sql = "update item" +
-                "set item_name=:itemName, price=:price, quantity=:quantity" +
+        String sql = "update item " +
+                "set item_name=:itemName, price=:price, quantity=:quantity " +
                 "where id=:id";
 
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("itemName", updateParam.getItemName())
                 .addValue("price", updateParam.getPrice())
                 .addValue("quantity", updateParam.getQuantity())
-                .addValue("id", itemId);
+                .addValue("id", itemId); //이 부분이 별도로 필요하다.
 
         template.update(sql, param);
     }
 
     @Override
     public Optional<Item> findById(Long id) {
-        String sql = "select id, item_name, price, quantity from item where id = :id?";
+        String sql = "select id, item_name, price, quantity from item where id = :id";
         try {
             Map<String, Object> param = Map.of("id", id);
             Item item = template.queryForObject(sql, param, itemRowMapper());
@@ -104,7 +105,6 @@ public class JdbcTemplateItemRepositoryV3 implements ItemRepository {
     }
 
     private RowMapper<Item> itemRowMapper() {
-
-        return BeanPropertyRowMapper.newInstance(Item.class);
+        return BeanPropertyRowMapper.newInstance(Item.class); //camel 변환 지원
     }
 }
