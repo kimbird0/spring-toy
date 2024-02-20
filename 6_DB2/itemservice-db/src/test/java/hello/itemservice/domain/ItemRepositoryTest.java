@@ -17,21 +17,21 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
+@Transactional
 @SpringBootTest
 class ItemRepositoryTest {
 
     @Autowired
     ItemRepository itemRepository;
 
-    @Autowired
-    PlatformTransactionManager transactionManager;
-    TransactionStatus status;
-
-    @BeforeEach
-    void beforeEach(){
-        status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-    }
+//    @Autowired
+//    PlatformTransactionManager transactionManager;
+//    TransactionStatus status;
+//
+//    @BeforeEach
+//    void beforeEach(){
+//        status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//    }
 
 
     @AfterEach
@@ -40,7 +40,7 @@ class ItemRepositoryTest {
         if (itemRepository instanceof MemoryItemRepository) {
             ((MemoryItemRepository) itemRepository).clearStore();
         }
-        transactionManager.rollback(status);
+//        transactionManager.rollback(status);
     }
 
     @Test
