@@ -1,5 +1,6 @@
 package hellojpa;
 
+import hellojpa.domain.Order;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -13,6 +14,10 @@ public class JpaMain {
         tx.begin();
 
         try {
+
+            Order order = new Order();
+            order.addOrderItem(null);
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
